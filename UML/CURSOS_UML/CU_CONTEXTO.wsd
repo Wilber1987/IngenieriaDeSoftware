@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+actor SYS_ADMON as SA
+actor ADMON as A
+actor DOCENTE as D
+actor ESTUDIANTE as E
+package PLATAFORMA {
+  usecase "MATRICULA" as UC1
+  usecase "GESTION DE CURSOS DOCENTES" as UC2
+  usecase "GESTION DE CURSOS ESTUDIANTES" as UC3
+  usecase "GESTION DE USUARIOS" as UC4
+  usecase "REPORTES" as UC5
+}
+package SGBD {
+  usecase "CRUD" as CRUD
+}
+CRUD <-- SA
+A --> UC4
+A --> UC5
+D --> UC2
+E --> UC1
+E --> UC3
+
+E <|-- D
+D <|-- A
+SA --|> A
+
+@enduml

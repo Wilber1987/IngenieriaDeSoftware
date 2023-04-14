@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+actor DOCENTE as D
+package GESTION_CURSOS_DOCENTES {
+  usecase "CREAR CURSO" as F1_1
+  usecase "INGRESO DATOS" as F1_2
+  usecase "VALIDAR DATOS" as F1_3
+  usecase "AGREGAR MATERIAL" as F2_1
+  usecase "SELECCIONAR MATERIAL" as F2_2
+  usecase "VALIDAR MATERIAL" as F2_3
+  usecase "MATRICULAR ESTUDIANTE" as F3_1
+  usecase "BUSCAR ESTUDIANTE" as F3_2
+  usecase "AGREGAR ESTUDIANTE" as F3_3
+  usecase "GESTIONAR NOTAS" as F4_1
+  usecase "INGRESAR NOTA" as F4_2
+  usecase "VALIDAR NOTA" as F4_3
+  usecase "GUARDAR CAMBIOS" as F_S
+}
+package SGBD {
+  usecase "CRUD" as CRUD
+}
+
+D --> F1_1
+F1_1 --> F1_2
+F1_2 --> F1_3
+F1_3 --> F_S
+D --> F2_1
+F2_1 --> F2_2
+F2_2 --> F2_3
+F2_3 --> F_S
+D --> F3_1
+F3_1 --> F3_2
+F3_2 --> F3_3
+F3_3 --> F_S
+D --> F4_1
+F4_1 --> F4_2
+F4_2 --> F4_3
+F4_3 --> F_S
+F_S -->SGBD
+@enduml

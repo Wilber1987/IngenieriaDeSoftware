@@ -1,0 +1,156 @@
+@startuml ARQUITECTURA DE PROYECTO
+
+
+package "FRONT-END(F-E) JS/TS Enviroment" #e2e2e2 {
+    class ViewComponent {
+        {abstract} void Draw()
+    }
+    interface HtmlElement
+    ViewComponent <|-- HtmlElement
+}
+package "F-E ServerSide (Razor Enviroment)" #e2e2e2 {
+    interface ViewRazor
+    note left
+        En caso de interfaz ViewRazor
+        este podra comunicarse a
+        raiz del model y por medio
+        de peticiones REST al server
+    end note
+    class ModelRazor {
+        {field} var Data
+        {abstract} void ServerEvents()
+    }
+    note right
+        En caso de patron MVC Modelrazor
+        es requerido, para guardar y manejar
+        los datos de ViewRazor (esto es opcional)
+    end note
+    class ControllerBase {
+        {abstract} void Functions()
+    }
+    note right
+        ControlBase tiene el trabajo
+        de escuchar las peticiones del
+        cliente, ademas de modificar el model
+        y puede comunicarse
+        tanto con Apis, o directamente
+        a operactions en capas superiores
+    end note
+    ViewRazor <|-- ModelRazor
+    ViewRazor -- ControllerBase
+    ControllerBase -- ModelRazor
+}
+
+ViewRazor -- ViewComponent
+
+note left
+    En caso de implementar interfaz
+    front end con JS/TS esta se comunicara
+    por medio de peticiones REST al server
+end note
+
+
+package "CAPA DE NEGOCIO" {
+    package "API-RESTFull" #e2e2e2 {
+        class ApiController {
+            {abstract} void Draw()
+        }
+    }
+    note left
+        API-RESTFull Prepara
+        al sistema, para
+        proveer servicios, tanto
+        internos como externo
+        permitiendole ser
+        multplataforma
+    end note
+    package "LOGICA NEGOCIO" #e2e2e2 {
+        class Security {
+            {abstract} void Methods()
+        }
+        class Services {
+            {abstract} void Methods()
+        }
+        class EntityMapping {
+            {abstract} void Methods()
+        }
+        class Operations {
+            {abstract} void Methods()
+        }
+        note left
+            las operation pueden ser
+            desde implemnatciones separadas
+            o formar parte de la logica
+            del entity
+        end note
+    }
+
+    ApiController -- Operations
+    Operations -- Security
+    Operations -- Services
+    Operations -- EntityMapping
+}
+
+
+ViewComponent .. ApiController:  Solicitud de datos >
+ControllerBase .. ApiController: Solicitud de datos >
+ControllerBase -- Operations
+
+package "CAPA DE DATOS/PERSISTENCIA" #e2e2e2 {
+    class Conexion {
+        {abstract} void Methods()
+    }
+    note right
+        Configuracion
+        de acceso a la BD
+    end note
+    class ImplementationPersistence {
+        {abstract} void Methods()
+    }
+    note right
+        Logica de escritura y lectura
+        implementada segun plataforma
+        de persistencia que se utilice
+        dentro de la aplicacion
+        (un sistema puede tener mas
+        de una implementacion)
+    end note
+    abstract class AbstractPersistence {
+        {abstract} void Methods()
+    }
+    note left
+        Logica general de
+        escritura y lectura
+        se implementan metodos
+        genericos y polimorfismo
+        segun se requiera
+    end note
+    ImplementationPersistence <|-- AbstractPersistence
+    class Entity {
+        {abstract} void Methods()
+    }
+    note left
+        Implementacion de Logica
+        de manejo de entidades dentro
+        de la aplicacion
+    end note
+    class ORMServices {
+        {abstract} void Methods()
+    }
+    note right
+        servicio de conversion de
+        datos puros devueltos por
+        el SGBD a datos entity
+    end note
+    Entity -- ImplementationPersistence
+    ImplementationPersistence -- Conexion
+    ImplementationPersistence -- ORMServices
+}
+
+EntityMapping -- Entity
+package SGBD <<Database>> #e2e2e2 {
+
+}
+Conexion -- SGBD: Verifica acceso >
+ImplementationPersistence -- SGBD : Lee/Escribe Datos >
+@enduml

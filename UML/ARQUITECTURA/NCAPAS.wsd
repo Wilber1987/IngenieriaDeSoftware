@@ -1,0 +1,33 @@
+@startuml
+left to right direction
+package PRESENTACION {
+  usecase "INTERFAZ DE APLICACION" as API
+  usecase "INTERFAZ DE USUARIO" as UI
+}
+package NEGOCIO {
+  usecase "MODULO 1" as M1
+  usecase "MODULO N" as MN
+  usecase "SERVICIOS" as SERVICES
+  usecase "MAPPEO" as MAPPING
+}
+package CAPA_DATOS {
+  usecase "CRUD" as CRUD
+  usecase "CONVERT" as CONVERT
+  usecase "ENTITY" as ENTITY  
+}
+package SGBD {
+  usecase "TABLAS" as TABLAS
+  usecase "VIEWS" as VIEWS
+  usecase "SP" as SP
+} 
+PRESENTACION --> NEGOCIO
+NEGOCIO --> CAPA_DATOS
+CAPA_DATOS --> SGBD
+UI-->API
+ENTITY-->CRUD
+CRUD-->CONVERT
+VIEWS-->TABLAS
+SP-->VIEWS
+SP-->TABLAS
+
+@enduml
